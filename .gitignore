@@ -29,3 +29,9 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+# Gradle / Android build output
+.gradle/
+**/build/
+local.properties
+*.iml
+.idea/
