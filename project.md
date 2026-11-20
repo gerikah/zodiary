@@ -184,13 +184,17 @@ Journaling should not lose text when a connection drops. The local database is t
 - Define how edits from two devices are reconciled. For MVP, prefer a version check and conflict state that preserves both copies over silent text overwrite. Exact UI for conflict resolution remains an open decision.
 - Do not claim end-to-end encryption. This proposal is account-based synchronization with server-accessible content, protected by access controls and encryption in transit/at rest.
 
+### Current implementation status (2026-11-18)
+
+The first Supabase client and local backend files are now in place. Guest entries stay in `SharedPreferences`; after email/password sign-in the app merges journal entries and preferences through authenticated, owner-scoped requests. Entry conflicts currently use latest-`updated_at` wins, sync runs on app open, sign-in, saved changes, or manual retry, and there is no durable background retry queue. Room/DataStore and a user-facing conflict flow remain follow-up work.
+
 ## 7. Backend and content architecture
 
 ### Trust boundary
 
 **Production target:** The Android client talks only to the Zodiary backend. A scheduled server-side adapter fetches CosmyDay content, applies shared caching and validation, and serves it to the app. No provider secret or privileged backend credential belongs in the app.
 
-**Current standalone frontend:** This repository has no Zodiary backend, serverless function, or shared database yet. The initial integration therefore calls CosmyDay's public no-key daily endpoint through a typed service and caches the complete twelve-sign response on-device. Move the fetch to the backend when its host is selected so users share one provider refresh. The app identifies itself with a `Zodiary-Android` User-Agent; no project URL or support contact is configured yet.
+**Current implementation:** Supabase is the selected backend. The repository contains the initial schema migration and a server-side CosmyDay importer, while the Android app reads the shared twelve-sign cache when Supabase settings are present. With no Supabase settings, it uses the public CosmyDay endpoint as a development fallback. The hosted migration, importer, and schedule still need deployment; project management access is not connected in this workspace.
 
 ### Daily reading import
 
@@ -309,9 +313,9 @@ Use the v2 PDF as the approved brand baseline. For the proposed MVP, use the lat
 
 | Decision | Recommended default | Why it remains open |
 |---|---|---|
-| Entry privacy/storage | Account-private sync with Room cache; no E2EE claim | Product copy and threat model must match server access. |
-| Account gate / guest mode | Account required for cloud sync; retain local draft while signing up | Guest writing changes data ownership and recovery expectations. |
-| Backend host/auth provider | Keep API provider-neutral until selected | The PDFs specify a Zodiary backend but not its host or auth contract. |
+| Entry privacy/storage | Supabase account-private sync with a local SharedPreferences copy; no E2EE claim | Move structured data to Room and align product copy with the server threat model. |
+| Account gate / guest mode | Guest-first local journaling; email/password account is optional for cloud sync | Confirm recovery and data ownership copy before release. |
+| Backend host/auth provider | Supabase Auth and Postgres selected | Hosted deployment is pending project management access. |
 | CosmyDay commercial attribution | Confirm format and expected traffic with provider | The content brief explicitly requests confirmation. |
 | CosmyDay response shape | Live all-sign and single-sign responses inspected; adapter covers the all-sign batch | Continue checking provider changes; the public OpenAPI spec does not fully describe response fields. |
 | Reading rollover/date | Use provider date if present; confirm timezone and rollover first | Users in different zones can otherwise see inconsistent “today” readings. |
@@ -320,7 +324,7 @@ Use the v2 PDF as the approved brand baseline. For the proposed MVP, use the lat
 | Prompt tagging | Start with preference/sign/element pools; add deterministic theme tags after validation | Reading match must be real and visible label must be accurate. |
 | Evergreen fallback | No at initial MVP unless 12 reviewed notes are authored | Avoid presenting stale or invented content as today’s reading. |
 | Lucky details | Omit unless response includes values; curated values need “Traditional associations” | Provider field availability is not verified. |
-| Entry conflict policy | Version check; preserve conflicting text for user resolution | Multi-device edits must not silently overwrite journal content. |
+| Entry conflict policy | Current MVP uses last-write-wins by `updated_at` | Consider a conflict screen that preserves both versions before public release. |
 | Mood taxonomy | Agree a small accessible, non-diagnostic set | The PDFs do not define exact mood options. |
 | Authentication fields | Email/password baseline; confirm username, OAuth, and verification flow | Mockups show username and social buttons; v3 copy does not establish them. |
 | Reminders | Optional, local-time scheduling with opt-in permission flow | Notification platform, scheduling behavior, and permission timing need definition. |

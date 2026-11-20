@@ -46,7 +46,7 @@ The values below are starting tokens sampled from the supplied PNGs. They should
 - Use a highly legible sans serif for body text, forms, navigation, buttons, and metadata.
 - Keep longer reading and journal text in the sans serif for comfortable reading and writing.
 - Starting scale: display 32–36sp, screen heading 26–32sp, section heading 20–24sp, body 16sp, helper text at least 14sp, and button labels 15–16sp. Allow system font scaling without clipping.
-- Select licensed fonts during implementation. The screenshots do not identify a font family.
+- Use Fraunces for display and heading typography and DM Sans for body text and controls. Their SIL Open Font Licenses are included under `font-licenses/`.
 
 ### Layout and surfaces
 

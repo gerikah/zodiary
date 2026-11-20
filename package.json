@@ -1,0 +1,7 @@
+{
+  "name": "zodiary-local-preview",
+  "private": true,
+  "scripts": {
+    "dev": "node web-preview/server.mjs"
+  }
+}

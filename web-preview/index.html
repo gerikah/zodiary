@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f3fb">
+    <meta name="description" content="Local visual preview of the Zodiary Android screens.">
+    <title>Zodiary · Local UI Preview</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="workbench">
+      <header class="topbar">
+        <a class="wordmark" href="/" aria-label="Zodiary preview home">
+          <img src="/assets/zodiary-logo.png" alt="Zodiary">
+        </a>
+        <span class="topbar-divider" aria-hidden="true"></span>
+        <div class="topbar-title">
+          <strong>Screen preview</strong>
+          <span>Native app, viewed in your browser</span>
+        </div>
+        <span class="local-badge"><span aria-hidden="true"></span> Local preview</span>
+      </header>
+
+      <main class="workspace">
+        <aside class="screen-rail" aria-label="Choose a screen">
+          <p class="rail-heading">Onboarding</p>
+          <button class="screen-link" type="button" data-screen="welcome">Welcome</button>
+          <button class="screen-link" type="button" data-screen="birthday">Birthday</button>
+          <button class="screen-link" type="button" data-screen="sign">Sign reveal</button>
+          <button class="screen-link" type="button" data-screen="preferences">Preferences</button>
+          <button class="screen-link" type="button" data-screen="trust">Trust note</button>
+          <p class="rail-heading rail-heading-spaced">Your journal</p>
+          <button class="screen-link" type="button" data-screen="home">Home</button>
+          <button class="screen-link" type="button" data-screen="journal">Journal</button>
+          <button class="screen-link" type="button" data-screen="calendar">Calendar</button>
+          <button class="screen-link" type="button" data-screen="profile">Profile</button>
+          <button class="screen-link" type="button" data-screen="reading">Daily reading</button>
+          <div class="rail-note">
+            <span class="note-star" aria-hidden="true">✦</span>
+            <p>Sample content only. This page does not connect to your account or app data.</p>
+          </div>
+        </aside>
+
+        <section class="preview-stage" aria-label="Phone screen preview">
+          <div class="stage-heading">
+            <div>
+              <p class="stage-kicker">Zodiary for Android</p>
+              <h1 id="screen-title">Home</h1>
+            </div>
+            <span class="device-size">393 × 852 dp</span>
+          </div>
+
+          <div class="device-wrap" id="device-wrap">
+            <div class="device" id="device">
+              <div class="device-screen">
+                <div class="status-bar">
+                  <span>9:41</span>
+                  <span class="status-icons" aria-label="Signal, Wi-Fi, battery">
+                    <svg viewBox="0 0 44 14" aria-hidden="true">
+                      <path d="M2 12V9M7 12V6M12 12V3" />
+                      <path d="M20 5.2c3.8-3.6 8.2-3.6 12 0M22.5 8c2.1-2 4.9-2 7 0M25.6 10.8c.3-.3.7-.3 1 0" />
+                      <rect x="36" y="3" width="7" height="8" rx="1.5" />
+                      <path d="M43 5.5h1v3h-1" />
+                    </svg>
+                  </span>
+                </div>
+                <main class="screen-content" id="screen-content" tabindex="-1"></main>
+                <nav class="bottom-nav" id="bottom-nav" aria-label="Main navigation"></nav>
+                <div class="home-indicator" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="preview-info">
+          <div class="info-block">
+            <p class="info-label">Preview type</p>
+            <p class="info-value">Browser mirror</p>
+            <p class="info-copy">A lightweight visual stand-in for the Compose renderer. It is not the Android app running in a browser.</p>
+          </div>
+          <div class="info-block">
+            <p class="info-label">What's live here</p>
+            <ul class="info-list">
+              <li>Switch between screens</li>
+              <li>Try the sample mood chips</li>
+              <li>Type in the journal preview</li>
+              <li>Browse the sample calendar</li>
+            </ul>
+          </div>
+          <div class="info-block info-state">
+            <span class="state-dot" aria-hidden="true"></span>
+            <div>
+              <p class="info-value">Services are off</p>
+              <p class="info-copy">No Supabase login, CosmyDay request, or real journal save is performed.</p>
+            </div>
+          </div>
+        </aside>
+      </main>
+    </div>
+  </body>
+</html>

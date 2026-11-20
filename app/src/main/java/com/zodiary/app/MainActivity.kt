@@ -1,12 +1,14 @@
 package com.zodiary.app
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,16 +60,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.KeyboardOptions
 import com.zodiary.app.ui.theme.ZodiaryColors
+import com.zodiary.app.ui.theme.DmSansFontFamily
+import com.zodiary.app.ui.theme.FrauncesFontFamily
 import com.zodiary.app.ui.theme.ZodiaryTheme
 import com.zodiary.app.data.DailyReading
 import com.zodiary.app.data.DailyReadingLabels
@@ -84,12 +93,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        zodiaryViewModel.handleAuthDeepLink(intent)
 
         setContent {
             ZodiaryTheme {
                 ZodiaryApp(zodiaryViewModel)
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        zodiaryViewModel.handleAuthDeepLink(intent)
     }
 }
 
@@ -132,7 +148,7 @@ private fun ZodiaryApp(model: ZodiaryViewModel) {
 }
 
 @Composable
-private fun AppNavigation(destination: Destination, onNavigate: (Destination) -> Unit) {
+internal fun AppNavigation(destination: Destination, onNavigate: (Destination) -> Unit) {
     val selected = when (destination) {
         Destination.Journal -> Destination.Journal
         Destination.Calendar -> Destination.Calendar
@@ -172,7 +188,7 @@ private fun AppNavigation(destination: Destination, onNavigate: (Destination) ->
 }
 
 @Composable
-private fun WelcomeScreen(onBegin: () -> Unit) {
+internal fun WelcomeScreen(onBegin: () -> Unit) {
     OnboardingColumn {
         BrandWordmark()
         Spacer(Modifier.height(36.dp))
@@ -192,7 +208,7 @@ private fun WelcomeScreen(onBegin: () -> Unit) {
 }
 
 @Composable
-private fun BirthdayScreen(model: ZodiaryViewModel) {
+internal fun BirthdayScreen(model: ZodiaryScreenModel) {
     val context = androidx.compose.ui.platform.LocalContext.current
     OnboardingColumn {
         BackRow(onBack = { model.navigate(Destination.Welcome) })
@@ -243,7 +259,7 @@ private fun BirthdayScreen(model: ZodiaryViewModel) {
 }
 
 @Composable
-private fun SignRevealScreen(model: ZodiaryViewModel) {
+internal fun SignRevealScreen(model: ZodiaryScreenModel) {
     OnboardingColumn {
         BackRow(onBack = { model.navigate(Destination.Birthday) })
         Spacer(Modifier.height(24.dp))
@@ -263,7 +279,7 @@ private fun SignRevealScreen(model: ZodiaryViewModel) {
 }
 
 @Composable
-private fun PreferencesScreen(model: ZodiaryViewModel) {
+internal fun PreferencesScreen(model: ZodiaryScreenModel) {
     OnboardingColumn {
         BackRow(onBack = {
             model.navigate(if (model.preferencesReturnTo == Destination.Profile) Destination.Profile else Destination.SignReveal)
@@ -284,7 +300,7 @@ private fun PreferencesScreen(model: ZodiaryViewModel) {
 }
 
 @Composable
-private fun TrustScreen(onContinue: () -> Unit) {
+internal fun TrustScreen(onContinue: () -> Unit) {
     OnboardingColumn {
         BrandWordmark()
         Spacer(Modifier.height(48.dp))
@@ -305,7 +321,7 @@ private fun TrustScreen(onContinue: () -> Unit) {
 }
 
 @Composable
-private fun HomeScreen(model: ZodiaryViewModel) {
+internal fun HomeScreen(model: ZodiaryScreenModel) {
     val greeting = when (java.time.LocalTime.now().hour) {
         in 5..11 -> "Good morning"
         in 12..17 -> "Good afternoon"
@@ -435,7 +451,7 @@ private fun CosmyDayAttribution(onDark: Boolean) {
 }
 
 @Composable
-private fun PromptCard(model: ZodiaryViewModel) {
+private fun PromptCard(model: ZodiaryScreenModel) {
     Surface(shape = RoundedCornerShape(24.dp), color = ZodiaryColors.White, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(20.dp)) {
             Text("A moment to notice", style = bodyStyle(14.sp, FontWeight.SemiBold), color = ZodiaryColors.Purple)
@@ -462,7 +478,7 @@ private fun AffirmationCard() {
 }
 
 @Composable
-private fun JournalScreen(model: ZodiaryViewModel) {
+internal fun JournalScreen(model: ZodiaryScreenModel) {
     AppScrollColumn(modifier = Modifier.imePadding()) {
         Text("Today's page", style = displayStyle(34.sp), color = ZodiaryColors.Purple)
         Spacer(Modifier.height(6.dp))
@@ -513,7 +529,7 @@ private fun JournalScreen(model: ZodiaryViewModel) {
 }
 
 @Composable
-private fun CalendarScreen(model: ZodiaryViewModel) {
+internal fun CalendarScreen(model: ZodiaryScreenModel) {
     var month by remember { mutableStateOf(LocalDate.now().withDayOfMonth(1)) }
     val first = month.withDayOfMonth(1)
     val offset = first.dayOfWeek.value % 7
@@ -603,7 +619,7 @@ private fun CalendarScreen(model: ZodiaryViewModel) {
 }
 
 @Composable
-private fun ProfileScreen(model: ZodiaryViewModel) {
+internal fun ProfileScreen(model: ZodiaryScreenModel) {
     var showSignPicker by remember { mutableStateOf(false) }
     AppScrollColumn {
         Text("Your space", style = displayStyle(34.sp), color = ZodiaryColors.Purple)
@@ -655,7 +671,7 @@ private fun ProfileScreen(model: ZodiaryViewModel) {
             }
         }
         Spacer(Modifier.height(15.dp))
-        Text("Entries are saved on this device. Account sync isn't connected yet.", style = bodyStyle(13.sp), color = ZodiaryColors.Muted)
+        AccountPanel(model)
         Spacer(Modifier.height(7.dp))
         Text("Reminder timing is saved, but notifications aren't active yet.", style = bodyStyle(13.sp), color = ZodiaryColors.Muted)
         Spacer(Modifier.height(20.dp))
@@ -665,6 +681,96 @@ private fun ProfileScreen(model: ZodiaryViewModel) {
         onDismiss = { showSignPicker = false },
         onSelect = { model.selectSign(it); showSignPicker = false },
     )
+}
+
+@Composable
+private fun AccountPanel(model: ZodiaryScreenModel) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val canSubmit = email.contains('@') && password.length >= 8 && !model.isAccountBusy && !model.isAccountInitializing
+
+    Spacer(Modifier.height(9.dp))
+    Surface(shape = RoundedCornerShape(23.dp), color = ZodiaryColors.White, modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(18.dp)) {
+            Text("Your account", style = bodyStyle(16.sp, FontWeight.SemiBold), color = ZodiaryColors.DeepPurple)
+            Spacer(Modifier.height(6.dp))
+
+            when {
+                model.isAccountInitializing -> {
+                    Text("Checking your account…", style = bodyStyle(14.sp), color = ZodiaryColors.Muted)
+                }
+                !model.isSupabaseConfigured -> {
+                    Text(
+                        model.supabaseConfigurationError ?: "Your journal is saved on this device. Connect Supabase to turn on account sync.",
+                        style = bodyStyle(14.sp), color = ZodiaryColors.Muted, lineHeight = 20.sp,
+                    )
+                }
+                model.accountEmail != null -> {
+                    Text("Signed in as ${model.accountEmail}", style = bodyStyle(14.sp), color = ZodiaryColors.Ink)
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        "Your entries and preferences sync when saved. A local copy stays on this device.",
+                        style = bodyStyle(13.sp), color = ZodiaryColors.Muted, lineHeight = 19.sp,
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(model.accountMessage, style = bodyStyle(13.sp), color = ZodiaryColors.Purple, lineHeight = 19.sp)
+                    Spacer(Modifier.height(7.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                        TextButton(onClick = model::syncAccount, enabled = !model.isAccountBusy) {
+                            Text(if (model.isAccountBusy) "Syncing…" else "Sync now", color = ZodiaryColors.Purple)
+                        }
+                        TextButton(onClick = model::signOutAccount, enabled = !model.isAccountBusy) {
+                            Text("Sign out", color = ZodiaryColors.Purple)
+                        }
+                    }
+                }
+                else -> {
+                    Text(
+                        "Start as a guest, then sign in when you want your journal backed up and available on another device.",
+                        style = bodyStyle(14.sp), color = ZodiaryColors.Muted, lineHeight = 20.sp,
+                    )
+                    Spacer(Modifier.height(11.dp))
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Email") },
+                        singleLine = true,
+                        enabled = !model.isAccountBusy,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Password") },
+                        singleLine = true,
+                        enabled = !model.isAccountBusy,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text("Use at least 8 characters.", style = bodyStyle(12.sp), color = ZodiaryColors.Muted)
+                    Spacer(Modifier.height(6.dp))
+                    Text(model.accountMessage, style = bodyStyle(13.sp), color = ZodiaryColors.Purple, lineHeight = 19.sp)
+                    Spacer(Modifier.height(7.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Button(
+                            onClick = { model.createAccount(email, password) },
+                            enabled = canSubmit,
+                            colors = ButtonDefaults.buttonColors(containerColor = ZodiaryColors.Purple),
+                        ) { Text(if (model.isAccountBusy) "Please wait…" else "Create account") }
+                        TextButton(
+                            onClick = { model.signIn(email, password) },
+                            enabled = canSubmit,
+                            modifier = Modifier.heightIn(min = 48.dp),
+                        ) { Text("Sign in", color = ZodiaryColors.Purple) }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -682,7 +788,7 @@ private fun ProfileSetting(title: String, detail: String, action: String, onClic
 }
 
 @Composable
-private fun ReadingScreen(model: ZodiaryViewModel, onBack: () -> Unit) {
+internal fun ReadingScreen(model: ZodiaryScreenModel, onBack: () -> Unit) {
     val reading = model.currentDailyReading
     AppScrollColumn {
         BackRow(onBack = onBack, backLabel = "Home")
@@ -777,11 +883,12 @@ private fun AppScrollColumn(modifier: Modifier = Modifier, content: @Composable 
 
 @Composable
 private fun BrandWordmark(modifier: Modifier = Modifier) {
-    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
-        Text("✦", color = ZodiaryColors.Gold, fontSize = 20.sp)
-        Spacer(Modifier.width(7.dp))
-        Text("zodiary", style = displayStyle(21.sp), color = ZodiaryColors.DeepPurple, fontWeight = FontWeight.SemiBold)
-    }
+    Image(
+        painter = painterResource(R.drawable.zodiary_logo),
+        contentDescription = "Zodiary",
+        modifier = modifier.width(138.dp).height(32.dp),
+        contentScale = ContentScale.Fit,
+    )
 }
 
 @Composable
@@ -912,14 +1019,14 @@ private fun SignPickerDialog(selected: ZodiacSign, onDismiss: () -> Unit, onSele
 }
 
 private fun displayStyle(size: androidx.compose.ui.unit.TextUnit) = androidx.compose.ui.text.TextStyle(
-    fontFamily = FontFamily.Serif,
+    fontFamily = FrauncesFontFamily,
     fontSize = size,
     fontWeight = FontWeight.Medium,
     lineHeight = size * 1.18f,
 )
 
 private fun bodyStyle(size: androidx.compose.ui.unit.TextUnit, weight: FontWeight = FontWeight.Normal) = androidx.compose.ui.text.TextStyle(
-    fontFamily = FontFamily.SansSerif,
+    fontFamily = DmSansFontFamily,
     fontSize = size,
     fontWeight = weight,
     lineHeight = size * 1.35f,

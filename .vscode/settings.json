@@ -1,0 +1,10 @@
+{
+  "composePreview.mode": "minimal",
+  "composePreview.variant": "debug",
+  "composePreview.logging.level": "quiet",
+  "java.import.gradle.java.home": "C:\\Program Files\\Android\\Android Studio\\jbr",
+  "java.import.gradle.jvmArguments": "-Xmx2g -Dfile.encoding=UTF-8",
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "C:\\Program Files\\Android\\Android Studio\\jbr"
+  }
+}

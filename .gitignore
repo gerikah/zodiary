@@ -17,6 +17,8 @@ public_html/hot
 
 storage/*.key
 .env
+.env.*
+!.env.example
 Homestead.yaml
 Homestead.json
 /.vagrant
@@ -35,3 +37,14 @@ auth.json
 local.properties
 *.iml
 .idea/
+
+# Local signing material and service credentials
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+google-services.json
+service-account*.json
+serviceAccount*.json

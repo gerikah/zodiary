@@ -5,7 +5,37 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.font.FontWeight
+import com.zodiary.app.R
+
+private val VariableFontWeights = listOf(
+    FontWeight.W100,
+    FontWeight.W200,
+    FontWeight.W300,
+    FontWeight.W400,
+    FontWeight.W500,
+    FontWeight.W600,
+    FontWeight.W700,
+    FontWeight.W800,
+    FontWeight.W900,
+)
+
+private fun variableFontFamily(resourceId: Int): FontFamily = FontFamily(
+    *VariableFontWeights.map { weight ->
+        Font(
+            resId = resourceId,
+            weight = weight,
+            variationSettings = FontVariation.Settings(weight, FontStyle.Normal),
+        )
+    }.toTypedArray(),
+)
+
+val FrauncesFontFamily = variableFontFamily(R.font.fraunces_variable)
+val DmSansFontFamily = variableFontFamily(R.font.dm_sans_variable)
 
 object ZodiaryColors {
     val Canvas = Color(0xFFF7F3FB)
@@ -39,15 +69,25 @@ private val ZodiaryScheme = lightColorScheme(
 
 @Composable
 fun ZodiaryTheme(content: @Composable () -> Unit) {
+    val defaults = Typography()
     MaterialTheme(
         colorScheme = ZodiaryScheme,
         typography = Typography(
-            bodyLarge = androidx.compose.material3.Typography().bodyLarge.copy(fontFamily = FontFamily.SansSerif),
-            bodyMedium = androidx.compose.material3.Typography().bodyMedium.copy(fontFamily = FontFamily.SansSerif),
-            bodySmall = androidx.compose.material3.Typography().bodySmall.copy(fontFamily = FontFamily.SansSerif),
-            titleLarge = androidx.compose.material3.Typography().titleLarge.copy(fontFamily = FontFamily.SansSerif),
-            titleMedium = androidx.compose.material3.Typography().titleMedium.copy(fontFamily = FontFamily.SansSerif),
-            labelLarge = androidx.compose.material3.Typography().labelLarge.copy(fontFamily = FontFamily.SansSerif),
+            displayLarge = defaults.displayLarge.copy(fontFamily = FrauncesFontFamily),
+            displayMedium = defaults.displayMedium.copy(fontFamily = FrauncesFontFamily),
+            displaySmall = defaults.displaySmall.copy(fontFamily = FrauncesFontFamily),
+            headlineLarge = defaults.headlineLarge.copy(fontFamily = FrauncesFontFamily),
+            headlineMedium = defaults.headlineMedium.copy(fontFamily = FrauncesFontFamily),
+            headlineSmall = defaults.headlineSmall.copy(fontFamily = FrauncesFontFamily),
+            titleLarge = defaults.titleLarge.copy(fontFamily = FrauncesFontFamily),
+            titleMedium = defaults.titleMedium.copy(fontFamily = FrauncesFontFamily),
+            titleSmall = defaults.titleSmall.copy(fontFamily = FrauncesFontFamily),
+            bodyLarge = defaults.bodyLarge.copy(fontFamily = DmSansFontFamily),
+            bodyMedium = defaults.bodyMedium.copy(fontFamily = DmSansFontFamily),
+            bodySmall = defaults.bodySmall.copy(fontFamily = DmSansFontFamily),
+            labelLarge = defaults.labelLarge.copy(fontFamily = DmSansFontFamily),
+            labelMedium = defaults.labelMedium.copy(fontFamily = DmSansFontFamily),
+            labelSmall = defaults.labelSmall.copy(fontFamily = DmSansFontFamily),
         ),
         content = content,
     )
