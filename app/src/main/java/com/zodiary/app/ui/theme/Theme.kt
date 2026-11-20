@@ -5,11 +5,14 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.zodiary.app.R
 
 private val VariableFontWeights = listOf(
@@ -50,6 +53,23 @@ object ZodiaryColors {
     val Border = Color(0xFFD9D1E5)
     val SoftRose = Color(0xFFF5E7E4)
     val SoftGreen = Color(0xFFE5EFE7)
+}
+
+object ZodiaryShapes {
+    val Hero = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp)
+    val Card = RoundedCornerShape(22.dp)
+    val CardLarge = RoundedCornerShape(28.dp)
+    val Pill = CircleShape
+    val Input = RoundedCornerShape(13.dp)
+}
+
+object ZodiarySpacing {
+    val ScreenInset = 24.dp
+    val CardInset = 18.dp
+    val SectionGap = 20.dp
+    val HeroMinHeight = 200.dp
+    val ActionHeight = 48.dp
+    val NavItemSize = 52.dp
 }
 
 private val ZodiaryScheme = lightColorScheme(

@@ -25,7 +25,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.util.concurrent.Executors
 
-enum class Destination { Welcome, Birthday, SignReveal, Preferences, Trust, Home, Journal, Calendar, Profile, Reading }
+enum class Destination { Splash, Welcome, Birthday, SignReveal, Preferences, Trust, Home, Journal, Calendar, Profile, Reading, Login, Register }
 
 data class ZodiacSign(val name: String, val symbol: String, val startMonth: Int, val startDay: Int, val accent: Long)
 
@@ -82,7 +82,7 @@ class ZodiaryViewModel(application: Application) : AndroidViewModel(application)
         private set
 
     override var destination by mutableStateOf(
-        if (storage.getBoolean(KEY_ONBOARDED, false)) Destination.Home else Destination.Welcome,
+        if (storage.getBoolean(KEY_ONBOARDED, false)) Destination.Home else Destination.Splash,
     )
         private set
 

@@ -18,56 +18,68 @@ import java.time.LocalDate
 
 private val previewModel = SampleZodiaryScreenModel()
 
+@Preview(name = "Splash", group = "Onboarding", widthDp = 393, heightDp = 852, showBackground = true)
+@Composable
+fun SplashScreenPreview() = PreviewFrame { ZodiaryReferenceScreens.Splash(onComplete = {}) }
+
 @Preview(name = "Welcome", group = "Onboarding", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun WelcomeScreenPreview() = PreviewFrame { WelcomeScreen(onBegin = {}) }
+fun WelcomeScreenPreview() = PreviewFrame { ZodiaryReferenceScreens.Welcome(previewModel) }
 
 @Preview(name = "Birthday", group = "Onboarding", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun BirthdayScreenPreview() = PreviewFrame { BirthdayScreen(previewModel) }
+fun BirthdayScreenPreview() = PreviewFrame { ZodiaryReferenceScreens.Birthday(previewModel) }
 
 @Preview(name = "Sign reveal", group = "Onboarding", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun SignRevealScreenPreview() = PreviewFrame { SignRevealScreen(previewModel) }
+fun SignRevealScreenPreview() = PreviewFrame { ZodiaryReferenceScreens.SignReveal(previewModel) }
 
 @Preview(name = "Preferences", group = "Onboarding", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun PreferencesScreenPreview() = PreviewFrame { PreferencesScreen(previewModel) }
+fun PreferencesScreenPreview() = PreviewFrame { ZodiaryReferenceScreens.Preferences(previewModel) }
 
 @Preview(name = "Trust note", group = "Onboarding", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun TrustScreenPreview() = PreviewFrame { TrustScreen(onContinue = {}) }
+fun TrustScreenPreview() = PreviewFrame { ZodiaryReferenceScreens.Trust(onContinue = {}) }
 
 @Preview(name = "Home", group = "App", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun HomeScreenPreview() = PreviewFrame(Destination.Home) { HomeScreen(previewModel) }
+fun HomeScreenPreview() = PreviewFrame(Destination.Home) { ZodiaryReferenceScreens.Home(previewModel) }
 
 @Preview(name = "Journal", group = "App", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun JournalScreenPreview() = PreviewFrame(Destination.Journal) { JournalScreen(previewModel) }
+fun JournalScreenPreview() = PreviewFrame(Destination.Journal) { ZodiaryReferenceScreens.Journal(previewModel) }
 
 @Preview(name = "Calendar", group = "App", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun CalendarScreenPreview() = PreviewFrame(Destination.Calendar) { CalendarScreen(previewModel) }
+fun CalendarScreenPreview() = PreviewFrame(Destination.Calendar) { ZodiaryReferenceScreens.Calendar(previewModel) }
 
 @Preview(name = "Profile", group = "App", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
-fun ProfileScreenPreview() = PreviewFrame(Destination.Profile) { ProfileScreen(previewModel) }
+fun ProfileScreenPreview() = PreviewFrame(Destination.Profile) { ZodiaryReferenceScreens.Profile(previewModel) }
 
 @Preview(name = "Daily reading", group = "App", widthDp = 393, heightDp = 852, showBackground = true)
 @Composable
 fun ReadingScreenPreview() = PreviewFrame(Destination.Reading) {
-    ReadingScreen(previewModel, onBack = {})
+    ZodiaryReferenceScreens.Reading(previewModel, onBack = {})
 }
+
+@Preview(name = "Login", group = "Account", widthDp = 393, heightDp = 852, showBackground = true)
+@Composable
+fun LoginScreenPreview() = PreviewFrame { ZodiaryReferenceScreens.Login(previewModel) }
+
+@Preview(name = "Register", group = "Account", widthDp = 393, heightDp = 852, showBackground = true)
+@Composable
+fun RegisterScreenPreview() = PreviewFrame { ZodiaryReferenceScreens.Register(previewModel) }
 
 @Composable
 private fun PreviewFrame(destination: Destination? = null, content: @Composable () -> Unit) {
     ZodiaryTheme {
         Scaffold(
-            containerColor = ZodiaryColors.Canvas,
+            containerColor = if (destination in setOf(Destination.Home, Destination.Journal, Destination.Calendar, Destination.Profile, Destination.Reading)) ZodiaryColors.Purple else ZodiaryColors.Canvas,
             bottomBar = {
                 if (destination in setOf(Destination.Home, Destination.Journal, Destination.Calendar, Destination.Profile, Destination.Reading)) {
-                    AppNavigation(destination ?: Destination.Home, onNavigate = {})
+                    ZodiaryReferenceScreens.Navigation(destination ?: Destination.Home, onNavigate = {})
                 }
             },
         ) { innerPadding ->

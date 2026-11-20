@@ -9,7 +9,8 @@
       "options": {
         "cwd": "${workspaceFolder}",
         "env": {
-          "JAVA_HOME": "C:\\Program Files\\Android\\Android Studio\\jbr"
+          "JAVA_HOME": "C:\\Program Files\\Android\\Android Studio\\jbr",
+          "GRADLE_USER_HOME": "${env:USERPROFILE}\\.gradle"
         }
       },
       "group": { "kind": "build", "isDefault": true },
@@ -23,7 +24,8 @@
       "options": {
         "cwd": "${workspaceFolder}",
         "env": {
-          "JAVA_HOME": "C:\\Program Files\\Android\\Android Studio\\jbr"
+          "JAVA_HOME": "C:\\Program Files\\Android\\Android Studio\\jbr",
+          "GRADLE_USER_HOME": "${env:USERPROFILE}\\.gradle"
         }
       },
       "group": "test",
@@ -37,7 +39,8 @@
       "options": {
         "cwd": "${workspaceFolder}",
         "env": {
-          "JAVA_HOME": "C:\\Program Files\\Android\\Android Studio\\jbr"
+          "JAVA_HOME": "C:\\Program Files\\Android\\Android Studio\\jbr",
+          "GRADLE_USER_HOME": "${env:USERPROFILE}\\.gradle"
         }
       },
       "problemMatcher": []
